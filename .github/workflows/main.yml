@@ -15,7 +15,9 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          # Мы НЕ пишем buildozer init, так как файл уже есть
+          buildozer init
+          # Вот эта строчка разрешает сборку:
+          sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/' buildozer.spec
           yes | buildozer android debug
         continue-on-error: false
 
