@@ -15,10 +15,7 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          buildozer init
-          # Подменяем стандартный конфиг на рабочий
-          sed -i 's/python3,kivy/python3,kivy,cython/' buildozer.spec
-          sed -i 's/#android.permissions = CAMERA/android.permissions = CAMERA,INTERNET/' buildozer.spec
+          # Мы НЕ пишем buildozer init, так как файл уже есть
           yes | buildozer android debug
         continue-on-error: false
 
