@@ -21,8 +21,10 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          # Принимаем все лицензии Android SDK заранее
-          mkdir -p ~/.android && touch ~/.android/repositories.cfg
+          # Если файла нет - создаем, если есть - идем дальше
+          [ -f buildozer.spec ] || buildozer init
+          # Разрешаем лицензии
+          sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/' buildozer.spec
           yes | buildozer android debug
         continue-on-error: false
 
