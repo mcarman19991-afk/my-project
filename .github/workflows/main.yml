@@ -6,23 +6,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install System Dependencies
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip autoconf autotools-dev libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev openjdk-17-jdk ant
+          sudo apt install -y git zip unzip autoconf autotools-dev libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev ant
           pip install --upgrade pip
           pip install "Cython<3.0" buildozer kivy
 
       - name: Build with Buildozer
         run: |
-          buildozer init
-          # Вот эта строчка разрешает сборку:
-          sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/' buildozer.spec
+          # Принимаем все лицензии Android SDK заранее
+          mkdir -p ~/.android && touch ~/.android/repositories.cfg
           yes | buildozer android debug
         continue-on-error: false
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: My-Final-App
+          name: My-App-Result
           path: bin/*.apk
